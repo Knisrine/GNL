@@ -6,7 +6,7 @@
 /*   By: nikhtib <nikhtib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 22:10:36 by nikhtib           #+#    #+#             */
-/*   Updated: 2024/12/06 19:14:15 by nikhtib          ###   ########.fr       */
+/*   Updated: 2024/12/07 23:48:06 by nikhtib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,51 +66,48 @@ char	*ft_strchr(char *s, int c)
 
 char	*get_next_line(int fd)
 {
-	char		buffer[BUFFER_SIZE + 1];
 	char		*nl;
-	int			srd;
 	static char	*s;
+	int			srd;
+	char		buffer[BUFFER_SIZE + 1];
 
-	srd = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-	{
-		if (s)
-		{
-			free(s);
-			s = NULL;
-		}
-		return (NULL);
-	}
-	if (s == NULL)
-		s = ft_strdup("");
-		if(!s)
-		return(NULL);
+		return (free(s), s = NULL, NULL);
+	srd = 1;
+	
 	while (srd > 0 && !ft_strchr(s, '\n'))
 	{
 		srd = read(fd, buffer, BUFFER_SIZE);
+		if (srd == -1)
+			return (free(s), free(s), NULL);
 		buffer[srd] = '\0';
 		if (!srd)
 			continue ;
 		s = ft_strjoin(s, buffer);
 	}
 	if (srd == 0 && (!s || *s == '\0'))
-	{
-		free(s);
-		s = NULL;
-		return (NULL);
-	}
+		return (free(s), s = NULL, NULL);
 	nl = ext_line(s);
 	s = rest_of_string(s);
 	return (nl);
 }
+#include <fcntl.h>
+#include <stdio.h>
 
-// int main()
-// {
-// 	// int fd = open("file.txt",O_CREAT | O_RDWR ,0777);
-// 	int fd = open("file.txt", O_CREAT | O_RDWR, 0777);
-// 	if(fd < 0)
-// 		printf("error\n");
-// 	char *line = get_next_line(fd);
-// 	printf("+%s",line);
-// 	close(fd);
-// }
+int main()
+{
+    int fd = open("file.text", O_CREAT | O_RDWR, 0777);
+
+    if (fd < 0){
+        printf("Error opening file");
+        return 1;
+    }
+
+	char *n = get_next_line(fd);
+	while(n)
+	{
+		printf("+%s", n);
+		n = get_next_line(fd);
+	}
+	
+}

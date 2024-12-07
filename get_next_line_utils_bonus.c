@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nikhtib <nikhtib@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/07 20:53:17 by nikhtib           #+#    #+#             */
+/*   Updated: 2024/12/07 23:06:02 by nikhtib          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line_bonus.h"
 
 void	*ft_memcpy(char *dst, char *src, size_t n)
@@ -48,9 +60,7 @@ char	*ext_line(char *s)
 
 	len = 0;
 	while (s[len] && s[len] != '\n')
-	{
 		len++;
-	}
 	if (s[len] == '\n')
 		len++;
 	line = malloc(len + 1);
@@ -79,16 +89,10 @@ char	*rest_of_string(char *s)
 
 	i = 0;
 	if (!s)
-	{
-		free(s);
 		return (NULL);
-	}
 	p = ft_strchr(s, '\n');
 	if (!p)
-	{
-		free(s);
-		return (NULL);
-	}
+		return (free(s), NULL);
 	p += 1;
 	rl = malloc(ft_strlen(p) + 1);
 	if (!rl)
@@ -99,6 +103,5 @@ char	*rest_of_string(char *s)
 		i++;
 	}
 	rl[i] = '\0';
-	free(s);
-	return (rl);
+	return (free(s), rl);
 }
