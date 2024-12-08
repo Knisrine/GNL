@@ -6,7 +6,7 @@
 /*   By: nikhtib <nikhtib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:57:00 by nikhtib           #+#    #+#             */
-/*   Updated: 2024/12/08 15:25:21 by nikhtib          ###   ########.fr       */
+/*   Updated: 2024/12/08 21:13:03 by nikhtib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,59 +64,44 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-char	*get_next_line(int fd)
+char	*read_line(int fd, char *s)
 {
-	char		*buffer;
-	char		*nl;
-	int			srd;
-	static char	*s[10240];
+	char	*buffer;
+	int		srd;
 
-	buffer = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-	{
-		if (s[fd])
-			return (free(s[fd]), s[fd] = NULL,free(buffer), NULL);
-		return (NULL);
-	}
-	buffer = malloc(BUFFER_SIZE + 1);
 	srd = 1;
-	while (srd > 0 && !ft_strchr(s[fd], '\n'))
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(s), s = NULL, NULL);
+	while (srd > 0 && !ft_strchr(s, '\n'))
 	{
 		srd = read(fd, buffer, BUFFER_SIZE);
+		if (srd == -1)
+			return (free(s), s = NULL, free(buffer), NULL);
 		buffer[srd] = '\0';
 		if (!srd)
 			continue ;
-		s[fd] = ft_strjoin(s[fd], buffer);
+		s = ft_strjoin(s, buffer);
 	}
 	free(buffer);
-	if (srd == 0 && (!s[fd] || *s[fd] == '\0'))
-		return (free(s[fd]), s[fd] = NULL, NULL);
-	return (nl = ext_line(s[fd]), s[fd] = rest_of_string(s[fd]), nl);
+	if (srd == 0 && (!s || *s == '\0'))
+		return (free(s), s = NULL, NULL);
+	return (s);
 }
-// #include <fcntl.h>
-// #include <stdio.h>
 
-// int main()
-// 	{
-// 	// exit(1);
-// 	// int fd = open("file.txt",O_CREAT | O_RDWR ,0777);
-// 	int fd1 = open("file1.txt", O_CREAT | O_RDWR, 0777);
-// 	int fd2 = open("file2.txt", O_CREAT | O_RDWR, 0777);
-	
-// 	char *line01 = get_next_line(fd1);
-// 	// exit(1);
-//     char *line02 = get_next_line(fd2);
-//     while(line01 || line02)
-// 	{
-// 	printf("+from file 1 -->%s",line01);
-// 	printf("+from file 2 --->%s",line02);
-// 	free(line01);
-// 	free(line02);
-// 	line01 = get_next_line(fd1);
-//     line02 = get_next_line(fd2);
-// 	// printf("+%s",line01);
-// 	// system("leaks a.out");
-// 	}
-// 	close(fd1);
-// 	close(fd2);
-// }
+char	*get_next_line(int fd)
+{
+	char		*nl;
+	static char	*s[10240];
+
+	if (fd < 0)
+		return (NULL);
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (free(s[fd]), s[fd] = NULL, NULL);
+	s[fd] = read_line(fd, s[fd]);
+	if (!s[fd])
+		return (NULL);
+	nl = ext_line(s[fd]);
+	s[fd] = rest_of_string(s[fd]);
+	return (nl);
+}

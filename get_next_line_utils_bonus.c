@@ -6,7 +6,7 @@
 /*   By: nikhtib <nikhtib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 20:53:17 by nikhtib           #+#    #+#             */
-/*   Updated: 2024/12/07 23:06:02 by nikhtib          ###   ########.fr       */
+/*   Updated: 2024/12/08 17:21:25 by nikhtib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	t_len = len_s1 + len_s2;
 	new_str = malloc(t_len + 1);
 	if (!new_str)
-		return (NULL);
+		return (free(s1), NULL);
 	ft_memcpy(new_str, s1, len_s1);
 	ft_memcpy(new_str + len_s1, s2, len_s2);
 	free(s1);

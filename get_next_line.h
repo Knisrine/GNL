@@ -6,7 +6,7 @@
 /*   By: nikhtib <nikhtib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 16:07:32 by nikhtib           #+#    #+#             */
-/*   Updated: 2024/12/07 20:34:29 by nikhtib          ###   ########.fr       */
+/*   Updated: 2024/12/08 20:20:10 by nikhtib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,4 @@ int		ft_strlen(char *str);
 char	*ft_strchr(char *scanned, int searched);
 char	*ext_line(char *s);
 char	*rest_of_string(char *s);
-char	*the_string(char *s, int fd);
 #endif
