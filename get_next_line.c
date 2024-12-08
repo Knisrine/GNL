@@ -6,7 +6,7 @@
 /*   By: nikhtib <nikhtib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 22:10:36 by nikhtib           #+#    #+#             */
-/*   Updated: 2024/12/08 01:37:47 by nikhtib          ###   ########.fr       */
+/*   Updated: 2024/12/08 14:27:47 by nikhtib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,24 +69,42 @@ char	*get_next_line(int fd)
 	char		*nl;
 	static char	*s;
 	int			srd;
-	char		buffer[BUFFER_SIZE + 1];
+	char		*buffer;
 
+	buffer = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (free(s), s = NULL, NULL);
 	srd = 1;
+	buffer = malloc(BUFFER_SIZE + 1);
 	while (srd > 0 && !ft_strchr(s, '\n'))
 	{
 		srd = read(fd, buffer, BUFFER_SIZE);
 		if (srd == -1)
-			return (free(s), s = NULL, NULL);
+			return (free(s),s = NULL, free(buffer), NULL);
 		buffer[srd] = '\0';
 		if (!srd)
 			continue ;
 		s = ft_strjoin(s, buffer);
 	}
+	free(buffer);
 	if (srd == 0 && (!s || *s == '\0'))
 		return (free(s), s = NULL, NULL);
 	nl = ext_line(s);
 	s = rest_of_string(s);
 	return (nl);
 }
+// #include <fcntl.h>
+// #include <stdio.h>
+// int main()
+// {
+// 	int fd = open("file.text", O_RDONLY);
+// 	char *line = get_next_line(fd);
+// 	while(line)
+// 	{
+// 		free(line);
+// 		printf("%s",line);
+// 		line = get_next_line(fd);
+// 	}
+// 	close(fd);
+// 	// system("leaks a.out");
+// }
